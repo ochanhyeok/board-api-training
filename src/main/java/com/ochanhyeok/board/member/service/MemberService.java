@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ochanhyeok.board.member.entity.Member;
 import com.ochanhyeok.board.member.repository.MemberRepository;
 
-import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,16 +21,24 @@ public class MemberService {
 	 */
 	@Transactional
 	public Member save(Member member) {
-		Member savedMember = memberRepository.save(member);
-		return savedMember;
+		if (memberRepository.existsByEmail(member.getEmail())) {
+			throw new RuntimeException("이미 존재하는 이메일입니다.");
+		}
+		return memberRepository.save(member);
 	}
 
-	@Transactional
-	public String login(String email, String password) {
-		Member member = new Member();
-		member.setEmail(email);
-		member.setPassword(password);
+	/**
+	 * 로그인 처리
+	 */
+	@Transactional(readOnly = true)
+	public Member login(String email, String password) {
+		Member member = memberRepository.findByEmail(email)
+			.orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
 
+		if (!password.equals(member.getPassword())) {
+			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+		}
 
+		return member;
 	}
 }
