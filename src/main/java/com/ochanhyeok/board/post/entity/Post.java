@@ -1,8 +1,8 @@
-package com.ochanhyeok.board.post;
+package com.ochanhyeok.board.post.entity;
 
 import java.time.LocalDateTime;
 
-import com.ochanhyeok.board.member.Member;
+import com.ochanhyeok.board.member.entity.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
