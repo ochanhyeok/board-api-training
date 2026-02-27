@@ -56,7 +56,7 @@ public class PostController {
 
 		String title = post.getTitle();
 		String content = post.getContent();
-		Post updatePost = postService.update(id, title, content);
+		Post updatePost = postService.update(id, member.getId(), title, content);
 
 		return updatePost;
 	}
@@ -68,6 +68,6 @@ public class PostController {
 			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
 		}
 
-		postService.delete(id);
+		postService.delete(id, member.getId());
 	}
 }

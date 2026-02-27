@@ -48,8 +48,12 @@ public class PostService {
 	 * 게시글 수정
 	 */
 	@Transactional
-	public Post update(Long id, String newTitle, String newContent) {
+	public Post update(Long id, Long memberId, String newTitle, String newContent) {
 		Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		if (!post.getMember().getId().equals(memberId)) {
+			throw new RuntimeException("해당 게시글에 권한이 없습니다.");
+		}
+
 		post.setTitle(newTitle);
 		post.setContent(newContent);
 		return post;
@@ -59,7 +63,12 @@ public class PostService {
 	 * 게시글 삭제
 	 */
 	@Transactional
-	public void delete(Long id) {
+	public void delete(Long id, Long memberId) {
+		Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		if (!post.getMember().getId().equals(memberId)) {
+			throw new RuntimeException("해당 게시글에 권한이 없습니다.");
+		}
+
 		postRepository.deleteById(id);
 	}
 }
