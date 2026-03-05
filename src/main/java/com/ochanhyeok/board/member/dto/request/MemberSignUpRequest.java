@@ -1,17 +1,7 @@
 package com.ochanhyeok.board.member.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class MemberSignUpRequest {
-
-	private String email;
-	private String password;
-	private String nickname;
-}
+public record MemberSignUpRequest(
+	String email,
+	String password,
+	String nickname
+) {}
