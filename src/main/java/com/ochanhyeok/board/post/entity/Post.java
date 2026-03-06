@@ -2,6 +2,7 @@ package com.ochanhyeok.board.post.entity;
 
 import java.time.LocalDateTime;
 
+import com.ochanhyeok.board.global.common.BaseEntity;
 import com.ochanhyeok.board.member.entity.Member;
 
 import jakarta.persistence.Column;
@@ -17,7 +18,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Post {
+public class Post extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +36,5 @@ public class Post {
 
 	@Column(nullable = false)
 	private int viewCount = 0;
-
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
 
 }

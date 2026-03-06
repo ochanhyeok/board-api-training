@@ -2,6 +2,8 @@ package com.ochanhyeok.board.member.entity;
 
 import java.time.LocalDateTime;
 
+import com.ochanhyeok.board.global.common.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Member {
+public class Member extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +29,4 @@ public class Member {
 	@Column(nullable = false)
 	private String nickname;
 
-	private LocalDateTime createdAt;
 }
