@@ -1,7 +1,5 @@
 package com.ochanhyeok.board.member.entity;
 
-import java.time.LocalDateTime;
-
 import com.ochanhyeok.board.global.common.BaseEntity;
 
 import jakarta.persistence.Column;

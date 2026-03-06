@@ -1,7 +1,5 @@
 package com.ochanhyeok.board.post.entity;
 
-import java.time.LocalDateTime;
-
 import com.ochanhyeok.board.global.common.BaseEntity;
 import com.ochanhyeok.board.member.entity.Member;
 
