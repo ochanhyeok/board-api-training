@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ochanhyeok.board.member.entity.Member;
+import com.ochanhyeok.board.post.dto.request.PostCreateRequest;
 import com.ochanhyeok.board.post.entity.Post;
 import com.ochanhyeok.board.post.repository.PostRepository;
 
@@ -22,7 +24,12 @@ public class PostService {
 	 * 게시글 작성
 	 */
 	@Transactional
-	public Post save(Post post) {
+	public Post save(PostCreateRequest request, Member member) {
+		Post post = Post.builder()
+			.title(request.title())
+			.content(request.content())
+			.member(member)
+			.build();
 		return postRepository.save(post);
 	}
 

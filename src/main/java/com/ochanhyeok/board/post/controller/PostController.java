@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ochanhyeok.board.global.response.ApiResponse;
 import com.ochanhyeok.board.member.entity.Member;
+import com.ochanhyeok.board.post.dto.request.PostCreateRequest;
+import com.ochanhyeok.board.post.dto.request.PostUpdateRequest;
+import com.ochanhyeok.board.post.dto.response.PostListResponse;
+import com.ochanhyeok.board.post.dto.response.PostResponse;
 import com.ochanhyeok.board.post.entity.Post;
 import com.ochanhyeok.board.post.service.PostService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,46 +34,58 @@ public class PostController {
 	private final PostService postService;
 
 	@PostMapping("/posts")
-	public Post save(HttpSession session, @RequestBody Post post) {
+	public ApiResponse<PostResponse> save(HttpSession session, @Valid @RequestBody PostCreateRequest request) {
 		Member member = (Member)session.getAttribute("loginMember");
 		if (member == null) {
 			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
 		}
-		post.setMember(member);
-		return postService.save(post);
+
+		Post post = postService.save(request, member);
+		PostResponse response = PostResponse.from(post);
+
+		return ApiResponse.ok(response);
 	}
 
 	@GetMapping("/posts")
-	public List<Post> findAll() {
-		return postService.findAll();
+	public ApiResponse<List<PostListResponse>> findAll() {
+		List<Post> posts = postService.findAll();
+		List<PostListResponse> responses = posts.stream()
+			.map(PostListResponse::from)
+			.toList();
+		return ApiResponse.ok(responses);
 	}
 
 	@GetMapping("/posts/{id}")
-	public Post findOne(@PathVariable Long id) {
-		return postService.findOne(id);
+	public ApiResponse<PostResponse> findOne(@PathVariable Long id) {
+		Post post = postService.findOne(id);
+		PostResponse response = PostResponse.from(post);
+		return ApiResponse.ok(response);
 	}
 
 	@PutMapping("/posts/{id}")
-	public Post update(HttpSession session, @PathVariable Long id, @RequestBody Post post) {
+	public ApiResponse<PostResponse> update(HttpSession session, @PathVariable Long id, @Valid @RequestBody PostUpdateRequest request) {
 		Member member = (Member)session.getAttribute("loginMember");
 		if (member == null) {
 			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
 		}
 
-		String title = post.getTitle();
-		String content = post.getContent();
+		String title = request.title();
+		String content = request.content();
 		Post updatePost = postService.update(id, member.getId(), title, content);
 
-		return updatePost;
+		PostResponse response = PostResponse.from(updatePost);
+
+		return ApiResponse.ok(response);
 	}
 
 	@DeleteMapping("/posts/{id}")
-	public void delete(HttpSession session, @PathVariable Long id) {
+	public ApiResponse<Void> delete(HttpSession session, @PathVariable Long id) {
 		Member member = (Member)session.getAttribute("loginMember");
 		if (member == null) {
 			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
 		}
 
 		postService.delete(id, member.getId());
+		return ApiResponse.ok();
 	}
 }
