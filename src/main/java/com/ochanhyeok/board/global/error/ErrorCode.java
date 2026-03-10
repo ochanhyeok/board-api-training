@@ -12,8 +12,9 @@ public enum ErrorCode {
 	ENTITY_NOT_FOUND(404, "C002", "엔티티를 찾을 수 없습니다"),
 
 	// Member
-	DUPLICATE_EMAIL(409, "M001", "이미 존재하는 이메일입니다."),
-	INVALID_PASSWORD(401, "M002", "비밀번호가 일치하지 않습니다"),
+	DUPLICATE_EMAIL(409, "M001", "이미 존재하는 이메일입니다"),
+	MEMBER_NOT_FOUND(404, "M002", "존재하지 않는 회원입니다"),
+	INVALID_PASSWORD(401, "M003", "비밀번호가 일치하지 않습니다"),
 
 	// Post
 	POST_NOT_FOUND(404, "P001", "게시글을 찾을 수 없습니다."),

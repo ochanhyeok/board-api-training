@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ochanhyeok.board.global.error.BusinessException;
+import com.ochanhyeok.board.global.error.ErrorCode;
 import com.ochanhyeok.board.global.response.ApiResponse;
 import com.ochanhyeok.board.member.entity.Member;
 import com.ochanhyeok.board.post.dto.request.PostCreateRequest;
@@ -37,7 +39,7 @@ public class PostController {
 	public ApiResponse<PostResponse> save(HttpSession session, @Valid @RequestBody PostCreateRequest request) {
 		Member member = (Member)session.getAttribute("loginMember");
 		if (member == null) {
-			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
+			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
 
 		Post post = postService.save(request, member);
@@ -66,7 +68,7 @@ public class PostController {
 	public ApiResponse<PostResponse> update(HttpSession session, @PathVariable Long id, @Valid @RequestBody PostUpdateRequest request) {
 		Member member = (Member)session.getAttribute("loginMember");
 		if (member == null) {
-			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
+			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
 
 		String title = request.title();
@@ -82,7 +84,7 @@ public class PostController {
 	public ApiResponse<Void> delete(HttpSession session, @PathVariable Long id) {
 		Member member = (Member)session.getAttribute("loginMember");
 		if (member == null) {
-			throw new RuntimeException("회원정보가 인증되지 않았습니다.");
+			throw new BusinessException(ErrorCode.UNAUTHORIZED);
 		}
 
 		postService.delete(id, member.getId());

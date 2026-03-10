@@ -3,6 +3,8 @@ package com.ochanhyeok.board.member.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ochanhyeok.board.global.error.BusinessException;
+import com.ochanhyeok.board.global.error.ErrorCode;
 import com.ochanhyeok.board.member.dto.request.MemberSignUpRequest;
 import com.ochanhyeok.board.member.entity.Member;
 import com.ochanhyeok.board.member.repository.MemberRepository;
@@ -23,7 +25,7 @@ public class MemberService {
 	@Transactional
 	public Member signUp(MemberSignUpRequest request) {
 		if (memberRepository.existsByEmail(request.email())) {
-			throw new RuntimeException("이미 존재하는 이메일입니다.");
+			throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
 		}
 		Member member = Member.builder()
 			.email(request.email())
@@ -39,10 +41,10 @@ public class MemberService {
 	@Transactional(readOnly = true)
 	public Member login(String email, String password) {
 		Member member = memberRepository.findByEmail(email)
-			.orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+			.orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NOT_FOUND));
 
 		if (!password.equals(member.getPassword())) {
-			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+			throw new BusinessException(ErrorCode.INVALID_PASSWORD);
 		}
 
 		return member;

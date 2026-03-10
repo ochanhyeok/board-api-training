@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ochanhyeok.board.global.error.BusinessException;
+import com.ochanhyeok.board.global.error.ErrorCode;
 import com.ochanhyeok.board.member.entity.Member;
 import com.ochanhyeok.board.post.dto.request.PostCreateRequest;
 import com.ochanhyeok.board.post.entity.Post;
@@ -46,7 +48,7 @@ public class PostService {
 	 */
 	@Transactional
 	public Post findOne(Long id) {
-		Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 		post.setViewCount(post.getViewCount() + 1);
 		return post;
 	}
@@ -56,9 +58,9 @@ public class PostService {
 	 */
 	@Transactional
 	public Post update(Long id, Long memberId, String newTitle, String newContent) {
-		Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 		if (!post.getMember().getId().equals(memberId)) {
-			throw new RuntimeException("해당 게시글에 권한이 없습니다.");
+			throw new BusinessException(ErrorCode.NOT_POST_AUTHOR);
 		}
 
 		post.setTitle(newTitle);
@@ -71,9 +73,9 @@ public class PostService {
 	 */
 	@Transactional
 	public void delete(Long id, Long memberId) {
-		Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 		if (!post.getMember().getId().equals(memberId)) {
-			throw new RuntimeException("해당 게시글에 권한이 없습니다.");
+			throw new BusinessException(ErrorCode.NOT_POST_AUTHOR);
 		}
 
 		postRepository.deleteById(id);
