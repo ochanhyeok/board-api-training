@@ -34,8 +34,9 @@ public class MemberController {
 	}
 
 	@PostMapping("/logout")
-	public void logout(HttpSession session) {
+	public ApiResponse<Void> logout(HttpSession session) {
 		session.invalidate();
+		return ApiResponse.ok();
 	}
 
 	@PostMapping("/members")

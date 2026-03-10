@@ -15,7 +15,7 @@ public class PostResponse {
 	private String title;
 	private String content;
 	private String nickname;
-	private int viewCnt;
+	private int viewCount;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
@@ -25,7 +25,7 @@ public class PostResponse {
 			.title(post.getTitle())
 			.content(post.getContent())
 			.nickname(post.getMember().getNickname())
-			.viewCnt(post.getViewCount())
+			.viewCount(post.getViewCount())
 			.createdAt(post.getCreatedAt())
 			.updatedAt(post.getUpdatedAt())
 			.build();

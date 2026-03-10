@@ -14,7 +14,7 @@ public class PostListResponse {
 	private Long id;
 	private String title;
 	private String nickname;
-	private int viewCnt;
+	private int viewCount;
 	private LocalDateTime createdAt;
 
 	public static PostListResponse from(Post post) {
@@ -22,7 +22,7 @@ public class PostListResponse {
 			.id(post.getId())
 			.title(post.getTitle())
 			.nickname(post.getMember().getNickname())
-			.viewCnt(post.getViewCount())
+			.viewCount(post.getViewCount())
 			.createdAt(post.getCreatedAt())
 			.build();
 	}
