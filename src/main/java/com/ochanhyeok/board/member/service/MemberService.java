@@ -3,6 +3,7 @@ package com.ochanhyeok.board.member.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ochanhyeok.board.member.dto.request.MemberSignUpRequest;
 import com.ochanhyeok.board.member.entity.Member;
 import com.ochanhyeok.board.member.repository.MemberRepository;
 
@@ -20,10 +21,15 @@ public class MemberService {
 	 * 회원가입
 	 */
 	@Transactional
-	public Member save(Member member) {
-		if (memberRepository.existsByEmail(member.getEmail())) {
+	public Member signUp(MemberSignUpRequest request) {
+		if (memberRepository.existsByEmail(request.email())) {
 			throw new RuntimeException("이미 존재하는 이메일입니다.");
 		}
+		Member member = Member.builder()
+			.email(request.email())
+			.password(request.password())
+			.nickname(request.nickname())
+			.build();
 		return memberRepository.save(member);
 	}
 

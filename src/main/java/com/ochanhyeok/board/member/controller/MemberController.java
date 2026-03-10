@@ -5,10 +5,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ochanhyeok.board.global.response.ApiResponse;
+import com.ochanhyeok.board.member.dto.request.MemberLoginRequest;
+import com.ochanhyeok.board.member.dto.request.MemberSignUpRequest;
+import com.ochanhyeok.board.member.dto.response.MemberResponse;
 import com.ochanhyeok.board.member.entity.Member;
 import com.ochanhyeok.board.member.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,10 +26,11 @@ public class MemberController {
 	private final MemberService memberService;
 
 	@PostMapping("/login")
-	public Member login(@RequestBody Member member, HttpSession session) {
-		Member loginMember = memberService.login(member.getEmail(), member.getPassword());
+	public ApiResponse<MemberResponse> login(@Valid @RequestBody MemberLoginRequest request , HttpSession session) {
+		Member loginMember = memberService.login(request.email(), request.password());
+		MemberResponse memberResponse = MemberResponse.from(loginMember);
 		session.setAttribute("loginMember", loginMember);
-		return loginMember;
+		return ApiResponse.ok(memberResponse);
 	}
 
 	@PostMapping("/logout")
@@ -33,7 +39,9 @@ public class MemberController {
 	}
 
 	@PostMapping("/members")
-	public Member save(@RequestBody Member member) {
-		return memberService.save(member);
+	public ApiResponse<MemberResponse> signUp(@Valid @RequestBody MemberSignUpRequest request) {
+		Member member = memberService.signUp(request);
+		MemberResponse response = MemberResponse.from(member);
+		return ApiResponse.ok(response);
 	}
 }
