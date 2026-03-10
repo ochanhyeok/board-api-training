@@ -58,10 +58,7 @@ public class PostService {
 	 */
 	@Transactional
 	public Post update(Long id, Long memberId, String newTitle, String newContent) {
-		Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
-		if (!post.getMember().getId().equals(memberId)) {
-			throw new BusinessException(ErrorCode.NOT_POST_AUTHOR);
-		}
+		Post post = validatePostAuthor(id, memberId);
 
 		post.setTitle(newTitle);
 		post.setContent(newContent);
@@ -73,11 +70,19 @@ public class PostService {
 	 */
 	@Transactional
 	public void delete(Long id, Long memberId) {
+		validatePostAuthor(id, memberId);
+
+		postRepository.deleteById(id);
+	}
+
+	/**
+	 * 게시글 작성자 검증 메서드
+	 */
+	private Post validatePostAuthor(Long id, Long memberId) {
 		Post post = postRepository.findById(id).orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 		if (!post.getMember().getId().equals(memberId)) {
 			throw new BusinessException(ErrorCode.NOT_POST_AUTHOR);
 		}
-
-		postRepository.deleteById(id);
+		return post;
 	}
 }
